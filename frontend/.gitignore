@@ -1,5 +1,6 @@
 # Logs
 .env
+docs
 logs
 *.log
 npm-debug.log*

@@ -7,16 +7,13 @@ from .models import Note
 from .serializers import NoteSerializer, UserSerializer
 
 
-class CommonNoteClass:
+class NoteListCreate(generics.ListCreateAPIView):
     serializer_class = NoteSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
         return Note.objects.filter(author=user)
-
-
-class NoteListCreate(generics.ListCreateAPIView, CommonNoteClass):
     
     def perform_create(self, serializer: Serializer):
         if serializer.is_valid():
@@ -25,8 +22,13 @@ class NoteListCreate(generics.ListCreateAPIView, CommonNoteClass):
             print(serializer.errors)
 
 
-class NoteDelete(generics.DestroyAPIView, CommonNoteClass):
-    """ """
+class NoteDelete(generics.DestroyAPIView):
+    serializer_class = NoteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Note.objects.filter(author=user)
     
 
 class CreateUserView(generics.CreateAPIView):
